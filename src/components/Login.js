@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState,useRef } from "react";
 import Header from "./Header";
+import { checkValidateData } from "../utils/Validate";
 
 const Login=()=>{
 
     const [isSignInForm,setIsSignInForm]=useState(true)
+    const [errorMessage,setErrorMessage]=useState(null)
+    const email=useRef(null)
+    const password=useRef(null)
 
     const toggleForm=()=>{
         setIsSignInForm(!isSignInForm)
+    }
+
+    const handleSubmitButton=()=>{
+        const validateData=checkValidateData(email.current.value,password.current.value);
+        setErrorMessage(validateData)
     }
 
     return(
@@ -17,12 +26,13 @@ const Login=()=>{
              alt='' />
              </div>
              <div className="w-4/12 absolute p-12 my-36 mx-auto right-0 left-0 bg-black shadow-black text-white bg-opacity-90">
-             <form className="relative">
+             <form onSubmit={(e)=>e.preventDefault()} className="relative">
                 <h1 className="font-bold text-3xl py-4">{isSignInForm?'Sign In':'Sign Up'}</h1>
-                {!isSignInForm && (<input className="border-black p-3 my-4 w-full rounded-md bg-gray-700" type='text' placeholder="Enter Full Name"/>)}
-                <input className="border-black p-3 my-4 w-full rounded-md bg-gray-700" type='email' placeholder="Email or phone number"/>
-                <input className="border-black p-3 my-4 w-full rounded-md  bg-gray-700" type='password' placeholder="Password"/>
-                <button className="p-3 my-8 bg-red-700 w-full rounded-md cursor-pointer">{isSignInForm?'Sign In':'Sign Up'}</button>
+                {!isSignInForm && (<input className="border-black p-3 my-4 w-full rounded-md bg-gray-700" type='text' placeholder="Full Name"/>)}
+                <input ref={email} className="border-black p-3 my-4 w-full rounded-md bg-gray-700" type='email' placeholder="Email or phone number"/>
+                <input ref={password} className="border-black p-3 my-4 w-full rounded-md  bg-gray-700" type='password' placeholder="Password"/>
+                <p className="font-bold text-red-500">{errorMessage}</p>
+                <button onClick={handleSubmitButton} className="p-3 my-8 bg-red-600 w-full rounded-md cursor-pointer">{isSignInForm?'Sign In':'Sign Up'}</button>
                 <p onClick={toggleForm} className="py-4 cursor-pointer">{isSignInForm?'New to Netflix? Sign Up Now':'Already registered, Sign In Now'}</p>
              </form>
              </div>
